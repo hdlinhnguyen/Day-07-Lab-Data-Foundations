@@ -141,7 +141,7 @@ class LawCustomChunker:
 
 # Khởi tạo chiến lược Custom cho hệ thống RAG Thuế doanh nghiệp
 law_custom_splitter = LawCustomChunker(chunk_size=500, chunk_overlap=100)
-
+```
 ### So Sánh: Strategy của tôi vs Baseline
 
 | Tài liệu | Strategy | Chunk Count | Avg Length | Retrieval Quality? |
