@@ -1,8 +1,10 @@
 # Báo Cáo Lab 7: Embedding & Vector Store
 
-**Họ tên:** [Tên sinh viên]
-**Nhóm:** [Tên nhóm]
-**Ngày:** [Ngày nộp]
+**Họ tên:** **Nguyễn Hồ Diệu Linh**
+
+**Nhóm:** **Table D1**
+
+**Ngày:** **05/06/2026**
 
 ---
 
@@ -11,20 +13,20 @@
 ### Cosine Similarity (Ex 1.1)
 
 **High cosine similarity nghĩa là gì?**
-> *Viết 1-2 câu:*
+> **High cosine similarity (độ tương đồng cosine cao, tiến gần về giá trị 1) nghĩa là** hai vector embedding hướng về cùng một phía trong không gian vector đa chiều. Trong xử lý ngôn ngữ tự nhiên (NLP), điều này biểu thị hai đoạn văn bản có **sự tương đồng rất lớn về mặt ngữ nghĩa, ngữ cảnh hoặc chủ đề**, ngay cả khi chúng không sử dụng chung các từ ngữ cụ thể hoặc được viết bằng các ngôn ngữ khác nhau.
 
 **Ví dụ HIGH similarity:**
-- Sentence A:
-- Sentence B:
-- Tại sao tương đồng:
+- Sentence A: *"Học máy là một nhánh quan trọng của trí tuệ nhân tạo."*
+- Sentence B: *"Machine learning đóng vai trò cốt lõi trong sự phát triển của AI."*
+- Tại sao tương đồng: Cả hai câu sử dụng tập từ vựng khác nhau (một câu thuần Việt, một câu đan xen thuật ngữ tiếng Anh) nhưng đều truyền tải chung một nội dung cốt lõi: mối quan hệ phụ thuộc và tầm quan trọng của Machine Learning đối với AI.
 
 **Ví dụ LOW similarity:**
-- Sentence A:
-- Sentence B:
-- Tại sao khác:
+- Sentence A: *"Học máy là một nhánh quan trọng của trí tuệ nhân tạo."*
+- Sentence B: *"Hôm nay thời tiết Hà Nội rất đẹp và thích hợp để đi dạo."*
+- Tại sao khác: Hai câu này hoàn toàn không có sự giao thoa nào về mặt ngữ cảnh hay chủ đề; một câu thuộc lĩnh vực khoa học máy tính, câu còn lại nói về thời tiết và hoạt động đời sống.
 
 **Tại sao cosine similarity được ưu tiên hơn Euclidean distance cho text embeddings?**
-> *Viết 1-2 câu:*
+> *Cosine similarity* được ưu tiên vì nó chỉ đo góc giữa hai vector mà **không bị ảnh hưởng bởi độ dài (độ lớn)** của chúng, giúp tập trung hoàn toàn vào việc đánh giá sự tương đồng về mặt ngữ nghĩa. Ngược lại, Euclidean distance chịu ảnh hưởng nặng nề bởi độ dài văn bản, khiến hai đoạn văn có cùng nội dung nhưng khác nhau về số lượng từ (độ dài vector khác nhau) bị đánh giá sai lệch là không tương đồng.
 
 ### Chunking Math (Ex 1.2)
 
@@ -32,8 +34,24 @@
 > *Trình bày phép tính:*
 > *Đáp án:*
 
+> Gọi:
+> - $N = 10,000$ (Tổng số ký tự)
+> - $C = 500$ (Kích thước mỗi chunk - `chunk_size`)
+> - $O = 50$ (Độ dài phần trùng lặp - `overlap`)
+
+> Mỗi dịch chuyển của một chunk mới (bước nhảy thực tế) có độ dài là: 
+> $$C - O = 500 - 50 = 450 \text{ ký tự}$$
+
+> Áp dụng công thức tính tổng số lượng chunks (lấy hàm trần $\lceil \dots \rceil$):
+> $$\text{Number of chunks} = \left\lceil \frac{N - O}{C - O} \right\rceil = \left\lceil \frac{10000 - 50}{500 - 50} \right\rceil = \left\lceil \frac{9950}{450} \right\rceil = \left\lceil 22.11 \right\rceil = 23$$
+
+> *Đáp án:* **23 chunks**
+
 **Nếu overlap tăng lên 100, chunk count thay đổi thế nào? Tại sao muốn overlap nhiều hơn?**
 > *Viết 1-2 câu:*
+> Khi `overlap` tăng từ 50 lên 100, kích thước bước nhảy giữa các chunk giảm xuống ($500 - 100 = 400$ ký tự), dẫn đến **tổng số lượng chunks tăng lên** (cụ thể là $\lceil 9900 / 400 \rceil = 25$ chunks). 
+
+> Chúng ta muốn tăng `overlap` để **tránh việc ngữ cảnh bị cắt đứt đột ngột tại ranh giới giữa các chunk**, giúp các thông tin mang tính liên kết logic, ngữ pháp hoặc đại từ thay thế không bị mất đi, từ đó tối ưu hóa chất lượng truy vấn cho mô hình RAG.
 
 ---
 
